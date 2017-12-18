@@ -1,0 +1,40 @@
+#include <opencv2/opencv.hpp>
+
+using namespace cv;
+
+int main()
+{
+	//打开视频文件
+	VideoCapture capture("Visible600x480.avi");
+	//检查打开是否成功
+	if (!capture.isOpened())
+		return 1;
+
+	//获得帧速率
+	double rate = capture.get(CV_CAP_PROP_FPS);
+
+	bool stop(false);
+
+	Mat frame;//当前视频帧
+	namedWindow("Extracted Frame");
+
+	//根据当前的帧速率计算帧之间的等待时间，单位ms
+	int delay = 1000 / rate;
+
+	//循环遍历视频中全部帧
+	while (!stop) {
+
+		//读取下一帧
+		if (!capture.read(frame))
+			break;
+		imshow("Extracted Frame", frame);
+
+		//等待一段时间，或者通过按键停止
+		if (waitKey(delay) >= 0)
+			stop = true;
+	}
+	capture.release();
+	system("pause");
+	return 0;
+
+}
